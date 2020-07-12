@@ -18,10 +18,11 @@ import numpy as np
         使用量靠前的标签
 
 """
+#todo:xzy 聚类
 def getRecommendedLabel(caseId):
     print('-------------标签推荐开始--------------------')
     stat=getStatistics(caseId)
-    sums=stat.iloc[:,1:].sum().sort_values(ascending=False) #todo:使用次数不太合适？
+    sums=stat.iloc[:,1:].sum().sort_values(ascending=False) #todo:使用次数不太合适 sigmoid()映射到[0,1]
     # stat.sort_values()
     print(sums[:4])
     print('-------------标签推荐完成--------------------')

@@ -7,10 +7,11 @@ import re
 from src.util import *
 import pandas as pd
 import numpy as np
+from math import cos
 
 #todo:将答案代码纳入统计
 # todo:内置类的方法统计
-
+# todo:zyd,整理内置方法
 """统计case中所有代码的库、方法、语法糖。
 
     Args:
@@ -21,6 +22,7 @@ import numpy as np
         
 """
 def searchCase(caseId):
+
     print('-------------CASE 统计开始--------------------')
     rated = getRated(caseId)
     # 取评分前五的path
@@ -164,6 +166,7 @@ def searchMethod(lines):
 #todo:补全操作符
 def splitLine(line):
     #操作符有的要转义，有的不用，测试清楚
+    #todo:zjy
     pattern=r'[+\-=*/()\[\]{\}]+'
     return re.split(pattern,line)
 

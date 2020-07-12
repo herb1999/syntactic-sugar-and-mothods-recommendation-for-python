@@ -1,10 +1,12 @@
 import re
+import pandas as pd
 variable='\s*[a-zA-Z_]+?[\w_]*\s*'
 lambda_name='lambda (.*){1}'
 function_name=variable+'|'+lambda_name
 Negative='\s*-?\d+\s*'
 a_list='\[{}(,{})*\]'.format(Negative,Negative)
 
+#todo:zjy
 
 # 1.选最大值
 re_maz1=re.compile(r'^'+variable+'\=\s*max\(.*\)$')
@@ -47,4 +49,8 @@ re_import=re.compile(r'from{}import({})'.format(variable,variable))
 
 print(re.match(re_generator,'list = ( a for a in b )').group(0))
 
-regFunctions=[]
+regFunctions={
+    'generator':re_generator
+
+}
+
