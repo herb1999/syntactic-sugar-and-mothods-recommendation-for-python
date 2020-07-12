@@ -29,6 +29,9 @@ def downloadAndUnzip(caseId):
     dir='../cases/' + caseId
     if not os.path.exists(dir):
         os.mkdir(dir)
+    else:
+        print('-------------文件已下载--------------------')
+        return
 
     for user in data.items():
         cases = user[1]['cases']

@@ -27,6 +27,9 @@ def getLibs():
 
 def getBuiltinMethods():
     return list(pd.read_csv('../data/built-in_methods.csv'))
+
+def getStatistics(caseId):
+    return pd.read_csv('../cases/' + caseId + '/statistics.csv')
 # X=[]
 # Y=[]
 # for file in filenameList:

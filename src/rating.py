@@ -149,14 +149,14 @@ def rate(caseId):
             results['path'].append(file)
             results['time'].append(data['runningTimeAvg'])
             results['lines'].append(data['codeLines'])
-    print(results)
+    # print(results)
     df=pd.DataFrame(results)
-    print(df)
+    # print(df)
     # 0-1标准化
     scaler = MinMaxScaler()
     df['time-std'] = scaler.fit_transform(df['time'].values.reshape(-1, 1))
     df['lines-std'] = scaler.fit_transform(df['lines'].values.reshape(-1, 1))
-    print(df)
+    # print(df)
     # 评分
     df['rate'] = df[['time-std', 'lines-std']].mean(axis=1)
     print(df)

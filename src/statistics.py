@@ -7,13 +7,21 @@ import re
 from src.util import *
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler
 
 #todo:将答案代码纳入统计
+# todo:内置类的方法统计
 
+"""统计case中所有代码的库、方法、语法糖。
 
+    Args:
+        caseId: 题目ID
 
-def search(caseId):
+    Returns:
+        得到以代码路径为索引，统计对象为列标签的dataFrame，结果保存到'../cases/' + caseId + '/statistics.csv'
+        
+"""
+def searchCase(caseId):
+    print('-------------CASE 统计开始--------------------')
     rated = getRated(caseId)
     # 取评分前五的path
     paths = list(rated.sort_values(by='rate')['path'][:5])
@@ -27,60 +35,139 @@ def search(caseId):
     results_method = []
     results_candy = []
     for path in paths:
-        res=searchLib(path)
-        if len(res)>0:
-            results_lib.append(res)
-    print('results_lib: ')
+        with open(path+'/main.py', 'r', encoding='UTF-8') as f:
+            lines = f.readlines()
+            res=searchLib(lines)
+            if len(res)>0:
+                res['path']=path
+                results_lib.append(res)
+
+            res=searchMethod(lines)
+            if len(res)>0:
+                res['path'] = path
+                results_method.append(res)
+    #库统计结果
+    results_lib=pd.DataFrame(results_lib)
+    # 内置方法统计结果
+    results_method=pd.DataFrame(results_method)
+    # print('results_lib: ')
     print(results_lib)
+    # print('results_method: ')
+    # print(results_method)
 
-#
-# def searchCode(file)
-def searchLib(path):
-    res = {}
-    pyPath = path + '/main.py'
-    with open(pyPath, 'r', encoding='UTF-8') as f:
+    # 统计结果合并
+    df=pd\
+        .merge(results_lib, results_method, on='path',how='outer')\
+        .fillna(0)\
+        .set_index('path')
+    print(df)
+    df.to_csv('../cases/' + caseId + '/statistics.csv')
+    print('-------------CASE 统计完成--------------------')
+
+
+"""统计单个代码中的库、方法、语法糖。
+
+    Args:
+        path: 代码路径
+
+    Returns:
+        统计对象为列标签，使用次数为值的Series
+
+"""
+def searchCode(path):
+    print('-------------CODE 统计开始--------------------')
+    results_lib = []
+    results_method = []
+    results_candy = []
+    with open(path+'/main.py', 'r', encoding='UTF-8') as f:
         lines = f.readlines()
-        for line in lines:
-            # 除去注释行
-            line = line.strip()
-            if line.startswith('#'):
-                continue
-            if 'import' in line:
-                print('found: ' + line)
-                patterns = line.split(' ')
+        res = searchLib(lines)
+        results_lib=pd.Series(res)
 
-                # from xxx import xxx 的形式
-                if 'from' in line:
-                    lib = patterns[patterns.index('from') + 1]
-                    res[lib] = 1
-                # import xxx 的形式
-                else:
-                    lib = patterns[patterns.index('import') + 1]
-                    res[lib] = 1
+        res = searchMethod(lines)
+        results_method=pd.Series(res)
+
+    print(results_lib)
+    print(results_method)
+    # 统计结果合并
+    res = pd.concat([results_method,results_lib])
+    print(res)
+    print('-------------CODE 统计完成--------------------')
     return res
 
-def searchMethod(path):
+
+"""统计库使用情况 
+
+    Args:
+        lines: 代码文本
+
+    Returns:
+        res: dict,库名为key，value=1
+
+"""
+def searchLib(lines):#todo:后续要统计库里具体的方法
+    res = {}
+    for line in lines:
+        # 除去注释行
+        line = line.strip()
+        if line.startswith('#'):
+            continue
+        if 'import' in line:
+            print('found: ' + line)
+            patterns = line.split(' ')
+
+            # from xxx import xxx 的形式
+            if 'from' in line:
+                lib = patterns[patterns.index('from') + 1]
+                res[lib] = 1
+            # import xxx 的形式
+            else:
+                lib = patterns[patterns.index('import') + 1]
+                res[lib] = 1
+    return res
+
+
+"""内置方法使用情况
+
+    Args:
+        lines: 代码文本
+
+    Returns:
+        res: dict,方法名为key，value=方法使用次数
+
+"""
+def searchMethod(lines):
     #todo:排除用内置方法名定义的变量和方法
     res = {}
     methods = getBuiltinMethods()
-    # print(methods)
-    pyPath = path + '/main.py'
-    with open(pyPath, 'r', encoding='UTF-8') as f:
-        lines = f.readlines()
-        for line in lines:
-            # 除去注释行
-            line = line.strip()
-            if line.startswith('#'):
-                continue
+    patterns=[]
+    for line in lines:
+        # 除去注释行
+        line = line.strip()
+        if line.startswith('#'):
+            continue
+        patterns.extend(splitLine(line))
 
-
+    res={ method:patterns.count(method)  for method in methods if method in patterns}
     return res
 
 
-#todo:根据操作符切分代码
+"""根据操作符切分代码
+
+    Args:
+        line: 代码行
+
+    Returns:
+        切分后的数组
+
+"""
+#todo:补全操作符
 def splitLine(line):
     #操作符有的要转义，有的不用，测试清楚
     pattern=r'[+\-=*/()\[\]{\}]+'
     return re.split(pattern,line)
-search('2307')
 
+
+# search('2307')
+
+# searchCode('../cases/2307/4/main.py')

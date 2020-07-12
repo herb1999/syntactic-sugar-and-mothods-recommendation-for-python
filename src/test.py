@@ -17,5 +17,14 @@ import re
 #     return mat
 # print(norm(a))
 
-a='1+2-3=4-ans(as)'
-print(re.split(r'[+\-=*/()\[\]{\}]+',a))
+# a='1+2-3=4-ans(as)'
+# print(re.split(r'[+\-=*/()\[\]{\}]+',a))
+
+a={1:2}
+a=pd.Series(a)
+b={3:4}
+b=pd.Series(b)
+print(pd.concat([a,b]))
+c=pd.DataFrame([1,2])
+print(c)
+print(c.shape)
