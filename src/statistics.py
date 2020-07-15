@@ -167,10 +167,22 @@ def searchMethod(lines):
 def splitLine(line):
     #操作符有的要转义，有的不用，测试清楚
     #todo:zjy
-    pattern=r'[+\-=*/()\[\]{\}]+'
-    return re.split(pattern,line)
+    op = '[=\+\-\*/\[\]\(\)]'
+    variable = '\s*[a-zA-Z_]+?[\w_]*\s*'
+    #先以操作符分割字符串
+    res = (re.split(op, line))
+    re_op1 = r'{}\.{}'.format(variable, variable)
+    re_op = r'({})'.format(variable, variable)
+    list = []
+    #得到变量名/函数名
+    for item in res:
+        if (re.match(re_op1, item) != None):
+            list.append(item)
+        else:
+            if (re.match(re_op, item) != None):
+                list.append(re.match(re_op, item).group(0))
+    print(list)
+    return list
 
-
-# search('2307')
-
-# searchCode('../cases/2307/4/main.py')
+#search('2307')
+print(searchCode('../cases/2307/4/main.py'))
