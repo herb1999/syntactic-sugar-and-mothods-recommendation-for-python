@@ -30,6 +30,16 @@ def getBuiltinMethods():
 
 def getStatistics(caseId):
     return pd.read_csv('../cases/' + caseId + '/statistics.csv')
+
+def sigmoid(x):
+    return 1/(1 + np.exp(-x))
+
+
+
+
+
+
+
 # X=[]
 # Y=[]
 # for file in filenameList:

@@ -121,11 +121,11 @@ def searchLib(lines):#todo:后续要统计库里具体的方法
             # from xxx import xxx 的形式
             if 'from' in line:
                 lib = patterns[patterns.index('from') + 1]
-                res[lib] = 1
+                res[lib] = sigmoid(1)
             # import xxx 的形式
             else:
                 lib = patterns[patterns.index('import') + 1]
-                res[lib] = 1
+                res[lib] = sigmoid(1)
     return res
 
 
@@ -135,7 +135,7 @@ def searchLib(lines):#todo:后续要统计库里具体的方法
         lines: 代码文本
 
     Returns:
-        res: dict,方法名为key，value=方法使用次数
+        res: dict,方法名为key，value=sigmoid(方法使用次数)
 
 """
 def searchMethod(lines):
@@ -150,7 +150,7 @@ def searchMethod(lines):
             continue
         patterns.extend(splitLine(line))
 
-    res={ method:patterns.count(method)  for method in methods if method in patterns}
+    res={ method:sigmoid(patterns.count(method))  for method in methods if method in patterns}
     return res
 
 
@@ -174,3 +174,4 @@ def splitLine(line):
 # search('2307')
 
 # searchCode('../cases/2307/4/main.py')
+
