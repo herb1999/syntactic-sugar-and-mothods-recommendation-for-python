@@ -9,7 +9,7 @@ a_list='\[{}(,{})*\]'.format(Negative,Negative)
 #todo:zjy
 
 # 1.选最大值
-re_maz1=re.compile(r'^'+variable+'\=\s*max\(.*\)$')
+re_max1=re.compile(r'^'+variable+'\=\s*max\(.*\)$')
 re_max2=re.compile(r'^'+variable+'\=.+if.+else.+')
 re_max3=re.compile(r'^'+variable+'\=\s*\[.*\]\[.*\]')
 
@@ -23,7 +23,7 @@ re_value_change=re.compile(r'^{}(,{})*\=.+'.format(variable,variable))
 re_split1=re.compile(r'^{}={}\[{}(:{})+\]'.format(variable,variable,Negative,Negative))
 
 # 5.推导表达式 for..in
-re_expression=re.compile(r'^{}\=\s*\[.+for{}in{}\]'.format(variable,variable,variable))
+re_derivation=re.compile(r'^{}\=\s*\[.+for{}in{}\]'.format(variable,variable,variable))
 
 #6.list先按一个属性排列，再按另外一个属性排列
 re_sort=re.compile(r'{}|{}\.sort\(key=lambda.+\)'.format(variable,a_list))
@@ -50,7 +50,16 @@ re_import=re.compile(r'from{}import({})'.format(variable,variable))
 print(re.match(re_generator,'list = ( a for a in b )').group(0))
 
 regFunctions={
-    'generator':re_generator
-
+    'generator':re_generator,
+    'max1':re_max1,
+    'max2':re_max2,
+    'max3':re_max3,
+    'value_change':re_value_change,
+    'split':re_split1,
+    'derivation':re_derivation,
+    'sort':re_sort,
+    'filter':re_filter,
+    'map':re_map,
+    'with':re_with,
 }
 
