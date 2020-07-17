@@ -17,7 +17,7 @@ import zipfile
 """
 def downloadAndUnzip(caseId):
     print('-------------下载解压题目--------------------')
-    f = open('../data/sample.json', encoding='utf-8')
+    f = open('../data/test_data.json', encoding='utf-8')
     res = f.read()
     data = json.loads(res)
     # print(data)

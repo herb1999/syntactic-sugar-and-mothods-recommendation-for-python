@@ -25,8 +25,7 @@ def searchCase(caseId):
 
     print('-------------CASE 统计开始--------------------')
     rated = getRated(caseId)
-    # 取评分前五的path
-    paths = list(rated.sort_values(by='rate')['path'][:5])
+    paths = list(rated.sort_values(by='rate')['path'])
     print(paths)
 
     # libs = getLibs()
@@ -181,8 +180,12 @@ def splitLine(line):
         else:
             if (re.match(re_op, item) != None):
                 list.append(re.match(re_op, item).group(0))
-    print(list)
+    # print(list)
     return list
 
 #search('2307')
-print(searchCode('../cases/2307/4/main.py'))
+# print(searchCode('../cases/2307/4'))
+with open('../cases/2307/32/main.py','r') as f:
+    lines=f.readlines()
+    for line in lines:
+        print(splitLine(line))
